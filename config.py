@@ -1,7 +1,8 @@
 # coding: utf-8
+import os
 
 # base64.b64encode(os.urandom(12))
-SECRET_KEY = 'SoCg3nia7obkd/Qt'
+SECRET_KEY = os.urandom(24)
 
 DEBUG = True
 

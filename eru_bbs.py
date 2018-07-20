@@ -5,6 +5,7 @@ from apps.front import bp as front_bp
 import config
 from exts import db
 
+
 def create_app():
 
     app = Flask(__name__)

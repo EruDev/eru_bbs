@@ -1,5 +1,8 @@
 # coding: utf-8
-from flask import Blueprint, views, render_template
+import os
+from flask import Blueprint, views, render_template, request, session, redirect, url_for
+from .forms import LoginForm
+from .models import CMSUser
 
 bp = Blueprint('cms', __name__, url_prefix='/cms')
 
@@ -10,10 +13,31 @@ def index():
 
 class LoginView(views.MethodView):
 
-    def get(self):
-        return render_template('cms/cms_login.html')
+    def get(self, message=None):
+        return render_template('cms/cms_login.html', message=message)
 
     def post(self):
-        pass
+        form = LoginForm(request.form, csrf_enabled=False)
+
+        if form.validate_on_submit():
+            email = form.email.data
+            password = form.password.data
+            remember = form.remember.data
+            user = CMSUser.query.filter_by(email=email).first()
+
+            if user and user.check_password(password):
+                session['user_id'] = user.id
+                if remember:
+                    # 设置session过期时间，默认31天
+                    session.permanent = True
+                return redirect(url_for('cms.index'))
+            else:
+                return self.get(message='密码或邮箱错误')
+        else:
+            # 如果验证失败, 刷新登录页面
+            message = form.errors.popitem()[1][0]
+            print(message)
+            return self.get(message=message)
+
 
 bp.add_url_rule('/login/', view_func=LoginView.as_view('login'))
