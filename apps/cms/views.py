@@ -9,6 +9,12 @@ from .decorators import login_required
 bp = Blueprint('cms', __name__, url_prefix='/cms')
 
 
+@bp.route('/profile')
+@login_required
+def profile():
+    return render_template('cms/cms_profile.html')
+
+
 @bp.route('/logout')
 @login_required
 def logout():
