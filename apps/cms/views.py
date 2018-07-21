@@ -59,4 +59,16 @@ class LoginView(views.MethodView):
             return self.get(message=message)
 
 
+class ResetPwdView(views.MethodView):
+
+    decorators = [login_required]
+
+    def get(self):
+        return render_template('cms/cms_resetpwd.html')
+
+    def post(self):
+        pass
+
+
 bp.add_url_rule('/login/', view_func=LoginView.as_view('login'))
+bp.add_url_rule('/resetpwd/', view_func=ResetPwdView.as_view('resetpwd'))
