@@ -1,7 +1,6 @@
 // 对jquery的ajax封装
 
 'use strict';
-
 var eruajax = {
     'get':function (args) {
         args['method'] = 'get';
@@ -14,13 +13,13 @@ var eruajax = {
     'ajax':function (args) {
         // 设置csrf_token
         this._ajaxSetup();
-        $._ajax(args);
+        $.ajax(args);
     },
     '_ajaxSetup': function () {
         $.ajaxSetup({
             'beforeSend':function (xhr, settings) {
                 if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain){
-                    var csrftoken = $('meta[name=csrf_token]').attr('content');
+                    var csrftoken = $('meta[name=csrf-token]').attr('content');
                     xhr.setRequestHeader("X-CSRFToken", csrftoken)
                 }
             }
