@@ -6,6 +6,7 @@ from .forms import LoginForm, ResetPwdForm
 from .models import CMSUser
 from .decorators import login_required
 from exts import db
+from apps.utils import restful
 
 
 bp = Blueprint('cms', __name__, url_prefix='/cms')
@@ -78,13 +79,16 @@ class ResetPwdView(views.MethodView):
             if user.check_password(oldpwd):
                 user.password = newpwd
                 db.session.commit()
-                return jsonify({'code': 200, 'message': 'ok'})
+                # return jsonify({'code': 200, 'message': 'ok'})
+                return restful.success(message='ok')
             else:
                 message = form.get_error()
-                return jsonify({'code': 400, "message": message})
+                # return jsonify({'code': 400, "message": message})
+                return restful.params_error(message='密码错误')
         else:
-            message = form.get_error()
-            return jsonify({'code': 400, "message": message})
+            # message = form.get_error()
+            # return jsonify({'code': 400, "message": message})
+            return restful.params_error(form.get_error())
 
 
 bp.add_url_rule('/login/', view_func=LoginView.as_view('login'))
