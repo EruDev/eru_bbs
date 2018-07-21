@@ -30,9 +30,9 @@ def index():
 
 class LoginView(views.MethodView):
 
-    def get(self, form=None):
+    def get(self, message=None):
         form = LoginForm()
-        return render_template('cms/cms_login.html', form=form)
+        return render_template('cms/cms_login.html', message=message)
 
     def post(self):
         form = LoginForm(request.form)
@@ -50,12 +50,13 @@ class LoginView(views.MethodView):
                     session.permanent = True
                 return redirect(url_for('cms.index'))
             else:
-                return render_template('cms/cms_login.html', form=form, message='邮箱或密码错误')
+                message = '邮箱或密码错误'
+                return self.get(message=message)
         else:
             # 如果验证失败, 刷新登录页面
             message = form.errors.popitem()[1][0]
             print(message)
-            return render_template('cms/cms_login.html', form=form, message=message)
+            return self.get(message=message)
 
 
 bp.add_url_rule('/login/', view_func=LoginView.as_view('login'))
