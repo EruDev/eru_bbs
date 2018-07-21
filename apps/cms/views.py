@@ -11,7 +11,7 @@ bp = Blueprint('cms', __name__, url_prefix='/cms')
 @bp.route('/')
 @login_required
 def index():
-    return 'cms index'
+    return render_template('cms/cms_index.html')
 
 
 class LoginView(views.MethodView):
