@@ -3,6 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf_token" content="{{ csrf_token() }}">
     <title>{% block title %}{% endblock %}</title>
     <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
     <link rel="icon" href="{{ static(filename='imgs/favicon.ico') }}">
