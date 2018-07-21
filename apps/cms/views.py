@@ -1,12 +1,20 @@
 # coding: utf-8
 import os
-from flask import Blueprint, views, render_template, request, session, redirect, url_for
+from flask import Blueprint, views, render_template, request, session, redirect, url_for, g
 from .forms import LoginForm
 from .models import CMSUser
 from .decorators import login_required
 
 
 bp = Blueprint('cms', __name__, url_prefix='/cms')
+
+
+@bp.route('/logout')
+@login_required
+def logout():
+    session.clear()
+    return redirect(url_for('cms.login'))
+
 
 @bp.route('/')
 @login_required
