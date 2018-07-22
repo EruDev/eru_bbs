@@ -1,7 +1,8 @@
 # coding: utf-8
-import os
+import string
+import random
 from flask import Blueprint, views, render_template, \
-    request, session, redirect, url_for, g, jsonify
+    request, session, redirect, url_for, g
 from flask_mail import Message
 from .forms import LoginForm, ResetPwdForm
 from .models import CMSUser
@@ -11,6 +12,23 @@ from apps.utils import restful
 
 
 bp = Blueprint('cms', __name__, url_prefix='/cms')
+
+
+@bp.route('/email_captcha/')
+def email_captcha():
+    # http://cms/email_captcha?email=xxx@xx.com
+    email = request.args.get('email')
+    if not email:
+        return restful.params_error('参数错误')
+    else:
+        captchas = string.ascii_letters + string.digits
+        captcha = ''.join(random.sample(captchas, 6))
+        message = Message('Eru论坛邮箱验证码', recipients=[email], body='这是您的邮箱验证码: %s' % captcha)
+        try:
+            mail.send(message)
+        except:
+            return restful.server_error()
+        return restful.success('success')
 
 
 @bp.route('/email')
