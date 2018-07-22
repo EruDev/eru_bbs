@@ -183,11 +183,12 @@ body {
     margin-top: 20px;
 }
 
-
-
 .top-group{
     padding: 5px 10px;
     border-radius: 2px;
     background: #ecedf0;
     overflow: hidden;
+}
+.form-container{
+    width: 300px;
 }
