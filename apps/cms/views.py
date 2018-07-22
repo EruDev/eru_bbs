@@ -84,7 +84,7 @@ class ResetPwdView(views.MethodView):
             else:
                 message = form.get_error()
                 # return jsonify({'code': 400, "message": message})
-                return restful.params_error(message='密码错误')
+                return restful.params_error(message=message)
         else:
             # message = form.get_error()
             # return jsonify({'code': 400, "message": message})
