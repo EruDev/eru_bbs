@@ -2,14 +2,22 @@
 import os
 from flask import Blueprint, views, render_template, \
     request, session, redirect, url_for, g, jsonify
+from flask_mail import Message
 from .forms import LoginForm, ResetPwdForm
 from .models import CMSUser
 from .decorators import login_required
-from exts import db
+from exts import db, mail
 from apps.utils import restful
 
 
 bp = Blueprint('cms', __name__, url_prefix='/cms')
+
+
+@bp.route('/email')
+def send_email():
+    message = Message('验证邮箱', recipients=['455772170@qq.com'], body='测试')
+    mail.send(message)
+    return 'success'
 
 
 @bp.route('/profile')
