@@ -4,11 +4,11 @@ import random
 from flask import Blueprint, views, render_template, \
     request, session, redirect, url_for, g
 from flask_mail import Message
-from .forms import LoginForm, ResetPwdForm
+from .forms import LoginForm, ResetPwdForm, ResetEmailForm
 from .models import CMSUser
 from .decorators import login_required
 from exts import db, mail
-from apps.utils import restful
+from apps.utils import restful, eru_cache
 
 
 bp = Blueprint('cms', __name__, url_prefix='/cms')
@@ -28,6 +28,7 @@ def email_captcha():
             mail.send(message)
         except:
             return restful.server_error()
+        eru_cache.set(email, captcha)
         return restful.success('success')
 
 
@@ -83,7 +84,7 @@ class LoginView(views.MethodView):
                 return self.get(message=message)
         else:
             # 如果验证失败, 刷新登录页面
-            message = form.errors.popitem()[1][0]
+            message = form.get_error()
             print(message)
             return self.get(message=message)
 
@@ -108,9 +109,8 @@ class ResetPwdView(views.MethodView):
                 # return jsonify({'code': 200, 'message': 'ok'})
                 return restful.success(message='ok')
             else:
-                message = form.get_error()
                 # return jsonify({'code': 400, "message": message})
-                return restful.params_error(message=message)
+                return restful.params_error(message='旧密码错误')
         else:
             # message = form.get_error()
             # return jsonify({'code': 400, "message": message})
@@ -125,7 +125,14 @@ class ResetEmailView(views.MethodView):
         return render_template('cms/cms_resetemail.html')
 
     def post(self):
-        pass
+        form = ResetEmailForm(request.form)
+        if form.validate():
+            email = form.email.data
+            g.cms_user.email = email
+            db.session.commit()
+            return restful.success('修改邮箱成功')
+        else:
+            return restful.params_error(form.get_error())
 
 
 bp.add_url_rule('/login/', view_func=LoginView.as_view('login'))
