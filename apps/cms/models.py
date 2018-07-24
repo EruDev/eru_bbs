@@ -65,3 +65,20 @@ class CMSUser(db.Model):
     def check_password(self, raw_password):
         result = check_password_hash(self.password, raw_password)  # 第一个参数: hash过的密码, 第二个参数:原始密码
         return result
+
+    @property
+    def permissions(self):
+        if not self.roles:
+            return 0
+        all_permissions = 0
+        for role in self.roles:
+            permissions = role.permissions
+            all_permissions != permissions
+        return all_permissions
+
+    def has_permission(self, permission):
+        return self.permissions&permission == permission
+
+    @property
+    def is_developer(self):
+        return self.has_permission(CMSPermission.ALL_PERMISSION)

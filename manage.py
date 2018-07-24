@@ -49,5 +49,29 @@ def create_role():
     db.session.commit()
 
 
+@manager.option('-e', '--email', dest='email')
+@manager.option('-n', '--name', dest='name')
+def add_user_to_role(email, name):
+    user = CMSUser.query.filer_by(email=email).first()
+    if user:
+        role = CMSRole.query.filer_by(name=name).first()
+        if role:
+            role.users.append(user)
+            db.session.commit()
+        else:
+            print('没有这个角色: %s' % role)
+    else:
+        print('%s邮箱没有这个用户！' % email)
+
+
+@manager.command
+def test_permission():
+    user = CMSUser.query.first()
+    if user.has_permission(CMSPermission.VISITOR):
+        print('这个用户有访问者权限！')
+    else:
+        print('这个用户没有访问者权限!')
+
+
 if __name__ == '__main__':
     manager.run()
