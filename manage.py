@@ -52,12 +52,13 @@ def create_role():
 @manager.option('-e', '--email', dest='email')
 @manager.option('-n', '--name', dest='name')
 def add_user_to_role(email, name):
-    user = CMSUser.query.filer_by(email=email).first()
+    user = CMSUser.query.filter_by(email=email).first()
     if user:
-        role = CMSRole.query.filer_by(name=name).first()
+        role = CMSRole.query.filter_by(name=name).first()
         if role:
             role.users.append(user)
             db.session.commit()
+            print('用户添加到角色成功!')
         else:
             print('没有这个角色: %s' % role)
     else:
@@ -66,7 +67,7 @@ def add_user_to_role(email, name):
 
 @manager.command
 def test_permission():
-    user = CMSUser.query.first()
+    user = CMSUser.query.filter_by(username='zhangsan')
     if user.has_permission(CMSPermission.VISITOR):
         print('这个用户有访问者权限！')
     else:

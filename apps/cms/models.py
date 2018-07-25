@@ -72,8 +72,7 @@ class CMSUser(db.Model):
             return 0
         all_permissions = 0
         for role in self.roles:
-            permissions = role.permissions
-            all_permissions != permissions
+            all_permissions = role.permissions
         return all_permissions
 
     def has_permission(self, permission):
