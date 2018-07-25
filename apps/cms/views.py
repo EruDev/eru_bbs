@@ -5,13 +5,54 @@ from flask import Blueprint, views, render_template, \
     request, session, redirect, url_for, g
 from flask_mail import Message
 from .forms import LoginForm, ResetPwdForm, ResetEmailForm
-from .models import CMSUser
-from .decorators import login_required
+from .models import CMSUser, CMSPermission
+from .decorators import login_required, permission_required
 from exts import db, mail
 from apps.utils import restful, eru_cache
 
 
 bp = Blueprint('cms', __name__, url_prefix='/cms')
+
+@bp.route('/posts')
+@login_required
+@permission_required(CMSPermission.POSTER)
+def posts():
+    return render_template('cms/cms_posts.html')
+
+
+@bp.route('/boards')
+@login_required
+@permission_required(CMSPermission.BOARDER)
+def boards():
+    return render_template('cms/cms_boards.html')
+
+
+@bp.route('/comments')
+@login_required
+@permission_required(CMSPermission.COMMENTER)
+def comments():
+    return render_template('cms/cms_comments.html')
+
+
+@bp.route('/croles')
+@login_required
+@permission_required(CMSPermission.ALL_PERMISSION)
+def croles():
+    return render_template('cms/cms_croles.html')
+
+
+@bp.route('/cusers')
+@login_required
+@permission_required(CMSPermission.CMSUSER)
+def cusers():
+    return render_template('cms/cms_cusers.html')
+
+
+@bp.route('/fusers')
+@login_required
+@permission_required(CMSPermission.FRONTUSER)
+def fusers():
+    return render_template('cms/cms_fusers.html')
 
 
 @bp.route('/email_captcha/')
