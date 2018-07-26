@@ -2,7 +2,7 @@ from flask import g
 from wtforms import StringField, IntegerField
 from wtforms.validators import Email, Length, InputRequired, EqualTo, ValidationError
 from ..forms import BaseForm
-from ..utils import eru_cache
+from utils import eru_cache
 
 class LoginForm(BaseForm):
     email = StringField('邮箱', validators=[Email(message='请输入正确的邮箱格式!'), InputRequired(message='请输入邮箱')])

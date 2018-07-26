@@ -8,7 +8,7 @@ from .forms import LoginForm, ResetPwdForm, ResetEmailForm
 from .models import CMSUser, CMSPermission
 from .decorators import login_required, permission_required
 from exts import db, mail
-from apps.utils import restful, eru_cache
+from utils import restful, eru_cache
 
 
 bp = Blueprint('cms', __name__, url_prefix='/cms')
