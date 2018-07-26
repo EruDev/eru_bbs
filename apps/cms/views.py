@@ -102,7 +102,6 @@ def index():
 class LoginView(views.MethodView):
 
     def get(self, message=None):
-        form = LoginForm()
         return render_template('cms/cms_login.html', message=message)
 
     def post(self):
